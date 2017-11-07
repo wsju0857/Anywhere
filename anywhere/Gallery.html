@@ -1,0 +1,388 @@
+﻿<?php
+   include 'php/DB.php';
+   session_start();
+   $nowpage = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+?>
+<!DOCTYPE html>
+<html class="no-js" lang="ko-KR">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Title -->
+<title>AnyWhere</title>
+
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="js/jquery.gallerie.js"></script>
+<link href="css/gallerie.css" rel="stylesheet" type="text/css">
+<link href="css/gallerie-effects.css" rel="stylesheet" type="text/css">
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+<link rel="stylesheet" type="text/css" href="css/jqcloud.css" />
+
+<style>
+   .profile_img{
+      border: 2px solid #fff;
+      border-radius: 70px;
+      -moz-border-radius: 70px;
+      -khtml-border-radius: 70px;
+      -webkit-border-radius: 70px;
+   }
+   .triangle-up {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid red;
+   }
+	#gallery {
+		margin-left: auto;
+		margin-right: auto;
+	}
+</style>
+
+<!-- Fonts -->   
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<script type="text/javascript" src="js/jqcloud-1.0.4.js"></script>
+<script type="text/javascript">
+    
+   	function info(){
+      var info_div = document.getElementById('info_div');
+      var lf = document.getElementById('lf');
+      var left = lf.style.left.replace("px","");
+      var mid = (Number(left)+(lf.offsetWidth / 2))-105;
+
+      info_div.style.left = mid+"px";
+
+      if(info_div.style.display == "none"){
+         info_div.style.display = "block";
+      }else{
+         info_div.style.display = "none";
+      }
+   	}
+   	function share_fb(){
+      window.open('http://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL));
+   	}
+
+   	function share_tt(){
+      window.open('http://www.twitter.com/intent/tweet?text='+ encodeURIComponent(document.title+"\n")
+            + '&url=' + encodeURIComponent(document.URL));
+   	}
+
+   	function location(){
+   		location.href='index.html';
+   	}
+</script>
+
+
+<script src="js/jquery.gallerie.js"></script>
+<link href="css/gallerie.css" rel="stylesheet" type="text/css">
+<link href="css/gallerie-effects.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#gallery').gallerie();
+
+	var test = ['1'];
+	for(var y = 1; y < 16; y++){
+		test.push(document.getElementById("img"+y));
+		if(y < 6){
+			test[y].style.top = "165px";
+		}else if(y >= 6 && y < 11){
+			test[y].style.top = "325px";
+		}else{
+			test[y].style.top = "485px";
+		}
+	}
+	test[1].style.left = "110px"; test[6].style.left = "110px"; test[11].style.left = "110px";
+	test[2].style.left = "255px"; test[7].style.left = "255px"; test[12].style.left = "255px";
+	test[3].style.left = "400px"; test[8].style.left = "400px"; test[13].style.left = "400px";
+	test[4].style.left = "545px"; test[9].style.left = "545px"; test[14].style.left = "545px";
+	test[5].style.left = "690px"; test[10].style.left = "690px"; test[15].style.left = "690px";	
+});
+</script>
+</head>
+<body class="image-background">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+<!-- menu -->
+<nav id="menu" class="menu">
+<button class="menu__handle"><span>Menu</span></button>
+<div class="menu__inner">
+<ul>
+<li><a href="index.html"><i class="fa fa-fw fa-home"></i><span>Home</span></a></li>
+<li><a href="php/Geo.php"><i class="fa fa-fw fa-map"></i><span>GeoLocation</span></a></li>
+<li><a href="Gallery.html"><i class="fa fa-fw ion-images"></i><span>Gallery</span></a></li>
+<li><a href="registration.html"><i class="fa fa-fw fa-share" aria-hidden="true"></i><span>Registration</span></a></li>
+<li><a href="introduce.html"><i class="fa fa-fw fa-info" aria-hidden="true"></i><span>Introduce</span></a></li>
+<li><a href="team.html"><i class="fa fa-users" aria-hidden="true"></i><span>Team</span></a></li>
+</ul>
+</div>
+<div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
+<svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
+<path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
+</svg>
+</div>
+</nav><!-- /menu -->
+
+<!-- main -->
+<div class="main">
+
+<!-- header -->
+<header class="header-site">
+
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+	<SPAN onclick="location.href='index.html'" style="cursor:pointer;"><h1>AnyWhere</h1></SPAN>
+</div>
+</header>
+<!-- /header -->
+
+<!-- Login -->
+<?php
+   $user = $_SESSION['login_user'];
+   if(!isset($_SESSION['login_user'])){
+?>
+   <div style="position:absolute; left:1150px; top:40px;">
+      <form action="Login.html" method="post">
+         <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+         <button type="submit" class="border-button no-bottom-margin" style="padding:9px 40px;">로그인</button>
+      </form>
+   </div>   
+<?php 
+   }else{
+?>
+   <div style="position:absolute; left:1150px; top:40px;" id="lf">
+      <button type="button" class="border-button no-bottom-margin" style="text-align:center; padding:0px 10px;
+      padding-top:4px; width:auto;" onclick="info()">
+      <?php 
+      $imgchk = mysql_query("select ImgName from member where id='$user'");
+      $total = mysql_num_rows($imgchk);
+      $result = mysql_fetch_array($imgchk);
+      
+      if($result[0] == "User.png"){
+      ?>
+         <img class="profile_img" src="images/User.png" style="width:64px; height:64px;">
+      <?php
+      }else{
+      ?>
+         <img class="profile_img" src="UserImageFolder/[<?= $user; ?>]<?= $result[0]; ?>" 
+         style="width:64px; height:64px;">
+      <?php
+      }
+      ?>
+      <span style="position:relative; top:-27px;">&nbsp;<?= $user; ?></span></button>
+   </div>
+<?php 
+   }
+?>
+<!-- /Login -->
+
+<!-- Info Form -->
+   <?php 
+      $mailchk = mysql_query("select Chkmail from member where id='$user'");
+      $mailresult = mysql_fetch_array($mailchk);
+      if($mailresult[0] == "준회원"){
+   ?>
+         <div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:200px; 
+         background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+         <?php echo $user; ?>
+         <form action="Modify.html">
+            <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+            <button type="submit" class="border-button no-bottom-margin">정보수정</button>
+         </form>
+         
+         <form action="Email1.html">
+            <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+            <button type="submit" class="border-button no-bottom-margin" style="width:168px; padding:9px 38px;">
+            이메일 인증</button>
+         </form>
+         
+         <form action="php/Logout.php">
+            <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+            <button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+         </form>
+         </div>
+   <?php 
+      }else{
+   ?>
+         <div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:150px; 
+         background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+         <?php echo $user; ?>
+         
+         <form action="Modify.html">
+            <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+            <button type="submit" class="border-button no-bottom-margin">정보수정</button>
+         </form>
+         
+         <form action="php/Logout.php">
+            <input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+            <button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+         </form>
+         </div>
+   <?php 
+      }
+   ?>
+<!-- /Info Form -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide"> 
+
+<div style="display: none;">
+<?php
+   if(!isset($_SESSION['login_status'])){
+      $_SESSION['login_status'] = "Normal";
+      echo $_SESSION['login_status'];
+   }else{
+      echo $_SESSION['login_status'];
+   }
+?>
+</div>  
+
+<!-- Subscribe Form -->
+<br>
+<div class="form animated bounceInUp" data-animation-delay="700">
+<hr>
+	<div id="gallery">
+	<?php   
+
+	$dir = "datapic/";
+	$array = [];
+  
+	if (is_dir($dir)){                              
+	  if ($dh = opendir($dir)){                     
+	    while (($file = readdir($dh)) !== false){
+	    	if($file != "." && $file != ".."){
+	    		array_push($array, $file);
+	    	}
+	    }
+	    closedir($dh);                              
+	  }                                             
+	}
+	       
+	$total = count($array)-1;
+
+	for($i = 1; $i < 16; $i++){
+		$random = mt_rand(0,$total);
+		$find = mysql_query("select name from data_pic where pic1='$array[$random]' or pic2='$array[$random]' or pic3='$array[$random]' or pic4='$array[$random]' or pic5='$array[$random]' or pic6='$array[$random]' or pic7='$array[$random]'");
+		$find_result = mysql_fetch_array($find);
+	?>
+		<a href="datapic/<?= $array[$random] ?>"><img src="datapic/<?= $array[$random] ?>" style="width:124px; height:124px;">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+		<nobr>
+		<span id="img<?= $i ?>" onclick="location.href='php/page_move.php?id=<?= $find_result[0] ?>'" style="position:absolute; width:124px; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"><?= $find_result[0] ?></span>
+		</nobr>
+	<?php
+		$result = array_splice($array, array_search($array[$random],$array),1 );
+		--$total;
+		if($i % 5 == 0){
+			echo "<br><br>";
+		}
+	} 
+	?>
+		
+	</div>
+<hr>
+</div><!-- /Subscribe Form -->
+
+<!-- socials icons -->
+<nav class="socials-icons animated bounceInUp" data-animation-delay="700">
+<ul>
+<li><a id="fb" onclick="share_fb()"><i class="ion-social-facebook"></i></a></li>
+<li><a id="tt" onclick="share_tt()"><i class="ion-social-twitter"></i></a></li>
+<li><a id="gp" onclick="test()"><i class="ion-social-googleplus"></i></a></li>
+</ul> 
+</nav><!-- /socials icons -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->        
+
+<!-- JS -->
+
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- /JS -->
+</body>
+</html>

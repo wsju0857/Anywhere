@@ -1,0 +1,170 @@
+<?php 
+	include 'php/DB.php';
+	session_start();
+	header("Content-Type: text/html; charset=UTF-8");
+?>
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en-US">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="326497702693-3fh02qdol05rmnvur3v8u2s00778dvfs.apps.googleusercontent.com">
+
+
+<!-- Title -->
+<title>AnyWhere - Email</title>
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+<!-- JS -->
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<script>
+	function Chkform(){
+		var cn = chkform.chk_name.value;
+		var cm = chkform.chk_mail.value;
+		if(cn == ""){
+			alert("이름을 입력해주세요!");
+			return false;
+		}else if(cm == ""){
+			alert("이메일을 입력해주세요!");
+			return false;
+		}
+	}
+</script>
+
+</head>
+<body class="image-background" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+<a href="index.html"><h1 style="margin-top:-70px;"><br>AnyWhere<br></h1></a>
+</div>
+</header>
+<!-- /header -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide">
+
+<!-- Subscribe Form -->
+<div class="form animated bounceInUp" data-animation-delay="700">
+<!-- container form -->
+<div class="container-form">
+
+<form action="php/SendMail.php" method="post" name="chkform" onsubmit="return Chkform();">
+	<span>회원가입 시 입력한 이름과 이메일을 입력해주세요</span><br><br>
+	<input type="text" placeholder="이름" name="chk_name" id="chk_name" style="width:325px;"><br>
+	<input type="email" placeholder="이메일" name="chk_mail" id="chk_mail" style="width:325px;"><br>
+	<button type="submit" class="border-button no-bottom-margin" style="width:325px; text-align:center; margin-top:-1px;"
+	>인증 보내기</button><br>
+	<button type="button" class="border-button no-bottom-margin" style="width:325px; text-align:center; margin-top:15px;"
+	onclick="location.href='index.html'">취소</button>		
+</form>
+
+</div><!-- /container form -->
+</div><!-- /Subscribe Form -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->        
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- /JS -->
+</body>
+</html>

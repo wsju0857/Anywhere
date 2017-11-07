@@ -1,0 +1,210 @@
+<?php
+	include 'php/DB.php';
+	session_start();
+	$nowpage = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+?>
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Title -->
+<title>AnyWhere - 등록 신청</title>
+
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<script type="text/javascript">
+	function initMap() {
+		var myLatLng = {lat: 37.8688, lng: 127.73235};
+		var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: myLatLng,
+          scrollwheel: true,
+          zoom: 17
+        });
+
+	  	var marker = new google.maps.Marker({ 
+	    	position: map.getCenter() 
+		});
+		marker.setMap(map);
+		
+		google.maps.event.addListener(map, 'click', function(event) {
+			var elat = event.latLng.lat();
+			var elng = event.latLng.lng();
+			
+		    marker.setPosition(event.latLng);
+		});
+}
+
+</script>
+
+</head>
+<body class="image-background">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+<!-- menu -->
+<nav id="menu" class="menu">
+<button class="menu__handle"><span>Menu</span></button>
+<div class="menu__inner">
+<ul>
+<li><a href="index.html"><i class="fa fa-fw fa-home"></i><span>Home</span></a></li>
+<li><a href="about.html"><i class="fa fa-fw fa-info"></i><span>About</span></a></li>
+<li><a href="team.html"><i class="fa fa-fw fa-users"></i><span>Team</span></a></li>
+<li><a href="services.html"><i class="fa fa-fw fa-gear"></i><span>Services</span></a></li>
+<li><a href="portfolio.html"><i class="fa fa-fw fa-camera"></i><span>Portfolio</span></a></li>
+<li><a href="contact.html"><i class="fa fa-fw fa-envelope"></i><span>Contact</span></a></li>
+</ul>
+</div>
+<div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
+<svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
+<path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
+</svg>
+</div>
+</nav><!-- /menu -->
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700">
+<h1 style="margin-top:-70px;"><a href="index.html"><br>AnyWhere<br></a></h1>
+</div>
+</header>
+<!-- /header -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- contact section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- header section -->
+<div class="header-section animated bounceInDown" data-animation-delay="700">
+<!-- title section -->
+<h3 class="title-section">등록 신청</h3><!-- /title section -->
+<div class="line-separate line-white line-center"><span></span></div>
+</div>
+<!-- /header section -->
+	
+<!-- content slide -->
+<div class="content-slide aboutus">
+<div class="row">
+<div class="col-xs-12 col-md-6 animated bounceInLeft" data-animation-delay="700">
+<p>등록 신청 할 업체의 정보를 입력해주세요.<br> 심사를 거쳐 등록을 해드립니다.</p>
+
+<!-- contact form -->
+<form method="post" action="../../send-mail.php" class="contact-form">
+
+<input type="text" name="name" placeholder="신청자명" class="required">
+<input type="text" name="homename" placeholder="가게이름" class="required">
+<input type="email" name="email" placeholder="이메일" class="contact-form-email required">
+<input type="text" name="address" placeholder="주소" class="contact-form-subject">
+<input type="text" name="telnum" placeholder="전화번호" class="contact-form-subject">
+<textarea name="message" placeholder="기타/비고" class="required" rows="7"></textarea>
+
+<div class="response-message"></div>
+<button class="border-button" type="submit" id="submit" name="submit">등록 신청</button>
+
+</form><!-- /contact form -->
+</div><!-- /col-xs-12 col-md-6 -->
+
+<!-- maps section -->
+<div class="col-xs-12 col-md-6 maps-section animated bounceInRight" data-animation-delay="700">
+<div class="big-maps center">
+<div id="map" style="width:450px; height:390px;"></div>
+</div>
+</div><!-- /maps section -->
+</div><!-- /row -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /contact section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->
+
+
+<!-- JS -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- Maps -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA162gubKw3Dj75y7uxjNS8yBGdeZsg3Pw&callback=initMap"></script>
+<!-- /Maps -->
+
+</body>
+</html>

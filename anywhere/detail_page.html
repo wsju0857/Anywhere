@@ -1,0 +1,745 @@
+﻿<?php 
+	error_reporting(0); 
+	ini_set('display_errors','0'); 
+
+	session_start();
+	include 'php/DB.php';
+	$nowpage = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+	
+	$name = $_POST['name'];
+	$address = $_POST['address'];
+	$telnum = $_POST['telnum'];
+	$viewcount = $_POST['viewcount'];
+	$latitude = $_POST['latitude'];
+	$longitude = $_POST['longitude'];
+	$imgcount = $_POST['imgcount'];
+	
+	for($i=0; $i<=$imgcount; $i++){
+		$img[$i]= $_POST["img$i"];
+	}
+
+	for($k=0; $k<4; $k++){
+		$title[$k]= $_POST["title$k"];
+		$link[$k]= $_POST["link$k"];
+		$description[$k]= $_POST["description$k"];
+		$bloggername[$k]= $_POST["bloggername$k"];
+		$bloggerlink[$k]= $_POST["bloggerlink$k"];
+		$postdate[$k] = substr($_POST["postdate$k"], 0, 4).'-'.substr($_POST["postdate$k"], 4, 2).'-'.substr($_POST["postdate$k"], 6, 2);
+	}
+?>
+<!DOCTYPE html>
+<html class="no-js" lang="ko-KR">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Title -->
+<title>AnyWhere - '<?php echo $name; ?>'</title>
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+<link rel="stylesheet" href="/maps/documentation/javascript/demos/demos.css">
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+
+
+<style type="text/css" media="all">
+	.profile_img{
+		border: 2px solid #fff;
+		border-radius: 70px;
+		-moz-border-radius: 70px;
+		-khtml-border-radius: 70px;
+		-webkit-border-radius: 70px;
+	}
+</style>
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+<!-- JS -->
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+
+
+<script>
+	function info(){
+		var info_div = document.getElementById('info_div');
+		if(info_div.style.display == "none"){
+			info_div.style.display = "block";
+		}else{
+			info_div.style.display = "none";
+		}
+	}
+	function share_fb(){
+		window.open('http://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL));
+	}
+
+	function share_tt(){
+		window.open('http://www.twitter.com/intent/tweet?text='+ encodeURIComponent(document.title+"\n")
+				+ '&url=' + encodeURIComponent(document.URL));
+	}
+
+	function initMap() {
+		var myLatLng = {lat: <?= $latitude; ?>, lng: <?= $longitude; ?>};
+		var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        // Create a map object and specify the DOM element for display.
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: myLatLng,
+          scrollwheel: false,
+          zoom: 17
+        });
+
+		var marker_title = new google.maps.InfoWindow({
+			content : "<?php echo $name; ?>",
+		});
+		var marker = new google.maps.Marker({
+			map : map,
+			position : myLatLng,
+			title : '<?php echo $name; ?>',
+			icon: image
+		});
+
+		var markerMaxWidth =300; // contentString이 나오는 부분의 최대 크기
+		var contentString = "<h6 style='color:black; align:center;'><?= $name ?></h6>";
+
+        var infowindow = new google.maps.InfoWindow({
+			content: contentString,
+			maxWidth: markerMaxWidth
+		});
+
+		google.maps.event.addListener(marker,'click',function(){
+			infowindow.open(map,marker);
+		});
+	}
+
+	<?php
+		for($k=1; $k<=$imgcount; $k++){
+	?>
+			function img_chec<?= $k; ?>(){
+				var bi1 = document.getElementById("bigimg1");
+				var bi2 = document.getElementById("bigimg2");
+				var bi3 = document.getElementById("bigimg3");
+				var bi4 = document.getElementById("mainimg");
+
+				bi2.style.zIndex = 100;				
+				bi1.style.backgroundImage = 'url(datapic/<?= $img[$k]; ?>)';
+				bi1.style.backgroundRepeat = 'no-repeat';
+				bi1.style.backgroundSize = 'cover';
+				bi1.style.opacity = .3333;
+				bi1.style.zIndex = 101;
+
+				bi4.src = 'datapic/<?= $img[$k]; ?>';
+				var sw = bi4.width / 2;
+				var sh = bi4.height / 2;
+				bi4.style.marginLeft = -sw+'px';
+				bi4.style.marginTop = -sh+'px';
+				
+				bi2.style.display = 'block';
+				bi1.style.display = 'block';
+				bi3.style.zIndex = 102;
+				bi3.style.display = 'block';
+			}
+	<?php
+		}
+	?>
+	function back(){
+		var bi1 = document.getElementById("bigimg1");
+		var bi2 = document.getElementById("bigimg2");
+		var bi3 = document.getElementById("bigimg3");
+		var bi4 = document.getElementById("mainimg");
+
+		bi1.style.display = 'none';
+		bi2.style.display = 'none';
+		bi3.style.display = 'none';
+	}
+
+	function con(){
+		var f = document.getElementById("insert");
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		var rep = document.getElementById("reple");
+
+		var i = document.createElement("input");
+		i.setAttribute("type","hidden");
+		i.setAttribute("name","grade");
+
+		var con = confirm("댓글을 등록하시겠습니까?");
+		if(con == true){
+			if(rep.value != ""){
+				if(gr5.style.color == "white"){
+					i.setAttribute("value","5");
+					f.appendChild(i);
+					f.submit();
+				}else if(gr4.style.color == "white"){
+					i.setAttribute("value","4");
+					f.appendChild(i);
+					f.submit();
+				}else if(gr3.style.color == "white"){
+					i.setAttribute("value","3");
+					f.appendChild(i);
+					f.submit();
+				}else if(gr2.style.color == "white"){
+					i.setAttribute("value","2");
+					f.appendChild(i);
+					f.submit();
+				}else if(gr1.style.color == "white"){
+					i.setAttribute("value","1");
+					f.appendChild(i);
+					f.submit();
+				}else{
+					i.setAttribute("value","0");
+					f.appendChild(i);
+					f.submit();
+				}
+			}else{
+				alert("댓글을 입력해주세요!");
+				return;
+			}
+		}else{
+			return;
+		}
+	}
+	function gr1(){
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		gr1.style.color = "white";
+		gr2.style.color = "darkgray";
+		gr3.style.color = "darkgray";
+		gr4.style.color = "darkgray";
+		gr5.style.color = "darkgray";
+	}
+	function gr2(){
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		gr1.style.color = "white";
+		gr2.style.color = "white";
+		gr3.style.color = "darkgray";
+		gr4.style.color = "darkgray";
+		gr5.style.color = "darkgray";
+	}
+	function gr3(){
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		gr1.style.color = "white";
+		gr2.style.color = "white";
+		gr3.style.color = "white";
+		gr4.style.color = "darkgray";
+		gr5.style.color = "darkgray";
+	}
+	function gr4(){
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		gr1.style.color = "white";
+		gr2.style.color = "white";
+		gr3.style.color = "white";
+		gr4.style.color = "white";
+		gr5.style.color = "darkgray";
+	}
+	function gr5(){
+		var gr1 = document.getElementById("gr1");
+		var gr2 = document.getElementById("gr2");
+		var gr3 = document.getElementById("gr3");
+		var gr4 = document.getElementById("gr4");
+		var gr5 = document.getElementById("gr5");
+		gr1.style.color = "white";
+		gr2.style.color = "white";
+		gr3.style.color = "white";
+		gr4.style.color = "white";
+		gr5.style.color = "white";
+	}
+
+</script>
+
+</head>
+<body class="image-background" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<div id="bigimg1" style="position:fixed; top:0px; left:0px; width:100%; height:100%;
+display:none;">
+</div>
+<div id="bigimg2" style="position:fixed; top:0px; left:0px; width:100%; height:100%;
+display:none; background-color:white;">
+</div>
+<div id="bigimg3" style="position:fixed; width:100%; height:100%;
+display:none; background-repeat:no-repeat;">
+	<img src="images/user.png" id="mainimg" style="position:relative; left:50%; top:50%; cursor:pointer;
+	border-radius:20px;" onclick="back()">
+	<i style="font-size:40px; position:absolute; top:20px; left:1250px; color:black; cursor:pointer;" class="ion-close-circled"
+	onclick="back()"></i>
+</div>
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+<!-- menu -->
+<nav id="menu" class="menu">
+<button class="menu__handle"><span>Menu</span></button>
+<div class="menu__inner">
+<ul>
+<li><a href="index.html"><i class="fa fa-fw fa-home"></i><span>Home</span></a></li>
+<li><a href="about.html"><i class="fa fa-fw fa-info"></i><span>About</span></a></li>
+<li><a href="team.html"><i class="fa fa-fw fa-users"></i><span>Team</span></a></li>
+<li><a href="services.html"><i class="fa fa-fw fa-gear"></i><span>Services</span></a></li>
+<li><a href="portfolio.html"><i class="fa fa-fw fa-camera"></i><span>Portfolio</span></a></li>
+<li><a href="contact.html"><i class="fa fa-fw fa-envelope"></i><span>Contact</span></a></li>
+</ul>
+</div>
+<div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
+<svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
+<path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
+</svg>
+</div>
+</nav><!-- /menu -->
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+<h1 style="margin-top:-70px;"><br><a href="index.html">AnyWhere</a><br></h1>
+</div>
+</header>
+<!-- /header -->
+
+<!-- Login -->
+<?php
+	$user = $_SESSION['login_user'];
+	if(!isset($_SESSION['login_user'])){
+?>
+	<div style="position:absolute; left:1150px; top:40px;">
+		<form action="Login.html" method="post">
+			<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+			<input type="hidden" name="id" value="<?= $name; ?>">
+			<button type="submit" class="border-button no-bottom-margin" style="padding:9px 40px;">로그인</button>
+		</form>
+	</div>	
+<?php 
+	}else{
+?>
+	<div style="position:absolute; left:1150px; top:40px;" id="lf">
+		<button type="button" class="border-button no-bottom-margin" style="text-align:center; padding:0px 10px;
+		padding-top:4px; width:auto;" onclick="info()">
+		<?php 
+		$imgchk = mysql_query("select ImgName from member where id='$user'");
+		$result = mysql_fetch_array($imgchk);
+		
+		if($result[0] == "User.png"){
+		?>
+			<img class="profile_img" src="images/User.png" style="width:64px; height:64px;">
+		<?php
+		}else{
+		?>
+			<img class="profile_img" src="UserImageFolder/[<?= $user; ?>]<?= $result[0]; ?>" 
+			style="width:64px; height:64px;">
+		<?php
+		}
+		?>
+		<span style="position:relative; top:-27px;">&nbsp;<?= $user; ?></span></button>
+	</div>
+<?php 
+	}
+?>
+<!-- /Login -->
+
+<!-- Info Form -->
+	<?php 
+		$mailchk = mysql_query("select Chkmail from member where id='$user'");
+		$mailresult = mysql_fetch_array($mailchk);
+		if($mailresult[0] == "준회원"){
+	?>
+			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:200px; 
+			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+			<?php echo $user; ?>
+			<form action="Modify.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
+			</form>
+			
+			<form action="Email1.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin" style="width:168px; padding:9px 38px;">
+				이메일 인증</button>
+			</form>
+			
+			<form action="php/Logout.php" method="post">
+				<input type="hidden" name="id" value="<?= $name; ?>">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+			</form>
+			</div>
+	<?php 
+		}else{
+	?>
+			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:150px; 
+			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+			<?php echo $user; ?>
+			
+			<form action="Modify.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
+			</form>
+			
+			<form action="php/Logout.php" method="post">
+				<input type="hidden" name="id" value="<?= $name; ?>">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+			</form>
+			</div>
+	<?php 
+		}
+	?>
+<!-- /Info Form -->
+
+<!-- section -->
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide"> 
+
+<div style="display: none;">
+<?php
+	if(!isset($_SESSION['login_status'])){
+		$_SESSION['login_status'] = "Normal";
+		echo $_SESSION['login_status'];
+	}else{
+		echo $_SESSION['login_status'];
+	}
+?>
+</div>
+
+<!-- Subscribe Form -->
+<div class="form animated bounceInUp" data-animation-delay="700">
+
+	<!-- google map -->
+	<hr>
+	<div id="map" style="width:943px; height:250px;"></div>
+	<hr>
+    
+	<!-- infomation -->
+	<div style="text-align:left;">
+		<i style="font-size:25px; text-indent:10px;" class="ion-ios-home fa-3x"></i>&nbsp;
+		<span style="font-weight:bold; position:relative; top:-3px;"><?= $name; ?></span><br>
+		
+		<i style="font-size:25px; text-indent:10px;" class="ion-ios-location"></i>&nbsp;
+		<span style="position:relative; top:-3px;"><?= $address; ?></span><br>
+		
+		<i style="font-size:25px; text-indent:10px;" class="ion-ios-telephone"></i>&nbsp;
+		<span style="position:relative; top:-3px;"><?= $telnum; ?></span><br>
+
+		<?php
+			$grade = mysql_query("select avg(grade) from reple where name='$name'");
+			$grade_avg = mysql_result($grade,0);
+		?>
+		
+		<i class="fa fa-star" aria-hidden="true" style="font-size:20px; text-indent:10px"></i>&nbsp;
+		<span style="position:relative; top:-3px;"><?= $grade_avg; ?></span><br><br>
+
+			<!-- image -->
+			<div align="center">
+	        <?php
+	        	$y = 2;
+	        	while($img[$y] != NUll){
+	        ?>
+				<img src="datapic/<?= $img[$y] ?>" id="<?= $y; ?>" width="130px" height="130px"
+				onclick="img_chec<?= $y; ?>()" style="border-radius:20px;" />
+			<?php
+					$y++;
+	        	}
+	        ?>
+	        </div>
+        </div>
+        <hr>
+        
+    	<!-- 댓글 -->
+    	<?php 
+    		$reple_query = mysql_query("select * from reple where name='$name'");
+    		$reple_result = mysql_fetch_array($reple_query);
+    		
+    		if (mysql_num_rows($reple_query)){
+    			$data = mysql_query("SELECT * FROM reple where name='$name'");
+				$num = mysql_num_rows($data);
+
+    			$page = $_GET['page'] ? $_GET['page'] : 1;
+    			$list = 10;
+    			$block = 2;
+    		
+    			$pageNum = ceil($num/$list); // 총 페이지
+    			$blockNum = ceil($pageNum/$block); // 총 블록
+    			$nowBlock = ceil($page/$block);
+    		
+    			$s_page = ($nowBlock * $block) - 2;
+    			if ($s_page <= 1) {
+    				$s_page = 1;
+    			}
+    			$e_page = $nowBlock*$block;
+    			if ($pageNum <= $e_page) {
+    				$e_page = $pageNum;
+    			}
+    		
+    			$s_point = ($page-1) * $list;
+    		
+    			$real_data = mysql_query("SELECT * FROM reple where name='$name' LIMIT $s_point,$list");
+    			?>
+    				
+    			<?php
+    			for ($i=1; $i <= $num; $i++) {
+    				$fetch = mysql_fetch_array($real_data);
+    				$real_img = mysql_query("select imgname from member where id='$fetch[1]'");
+	    			$result = mysql_fetch_array($real_img);
+
+    				if($result[0] == "User.png"){
+					?>
+						<div align="left">
+						<img class="profile_img" src="images/User.png" style="width:48px; height:48px;">
+					<?php
+					}else{
+					?>
+						<div align="left">
+						<img class="profile_img" src="UserImageFolder/[<?= $fetch[1]; ?>]<?= $result[0]; ?>" 
+						style="width:48px; height:48px;">
+					<?php
+					}
+					?>			     
+    				    	<span style="position:relative; top:-34px; left:10px;"><?= $fetch[1]; ?></span><br>
+    				    	<?php
+    				    	if($fetch[2] == "0"){
+    				    	?>
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i></span><br>
+    				    	<?php
+    				    	}else if($fetch[2] == "1"){
+    				    	?>
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i></span><br>
+    				    	<?php
+    				    	}else if($fetch[2] == "2"){
+    				    	?>
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i></span><br>
+    				    	<?php
+    				    	}else if($fetch[2] == "3"){
+    				    	?>
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i></span><br>
+    				    	<?php
+    				    	}else if($fetch[2] == "4"){
+    				    	?>	
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true" style="color:darkgray;"></i></span><br>
+    				    	<?php
+    				    	}else if($fetch[2] == "5"){
+    				    	?>
+    				    		<span style="position:relative; top:-35px; left:62px;">
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i>
+    				    		<i class="fa fa-star" aria-hidden="true"></i></span><br>
+    				    	<?php
+    				    	}
+    				    	?>
+    				    	<span style="position:relative; top:-63px; left:160px;"><?= $fetch[4]; ?></span><br>
+    				    	<span style="position:relative; top:-63px; left:62px;"><?= $fetch[3]; ?></span>
+    				    </div>
+    				    <hr style="width:90%; color:black;" color="black">
+    		<?php
+    			}
+    			for ($p=$s_page; $p<=$e_page; $p++) {
+    		?>
+    				<a href="<?php $PHP_SELF; ?>?SearchText=<?= $Search1; ?>&page=<?= $p; ?>"><?= $p; ?></a>
+    		<?php
+    			}
+    		}else if(mysql_num_rows($data) == 0){
+    		?>
+    			<span>댓글이 없습니다</span><br><br>
+    		<?
+    		}
+    		?>
+		<?php	
+			if($mailresult[0] == "준회원"){
+		?>
+				<textarea disabled placeholder="이메일 인증 후 사용가능합니다." style="position:relative; width:100%; height:80px; resize:none;" rows="2"></textarea>
+		<?php 
+			}else if($mailresult[0] == "정회원"){
+				$already = mysql_query("select id from reple where name='$name' and id='$user'");
+				$already_total = mysql_num_rows($already);
+
+				if($already_total > 0 ){
+		?>
+				<textarea disabled placeholder="이미 댓글을 등록하셨습니다." style="position:relative; width:100%; height:80px; resize:none;" rows="2"></textarea>
+		<?php
+				}else{
+		?>
+				<form action="php/insert_reple.php" method="post" id="insert">
+					<input type="hidden" name="name" value="<?= $name ?>">
+					<textarea name="reple" id="reple" style="position:relative; float:left; width:80%; height:80px; resize:none;" rows="2" class="border-button no-bottom-margin"></textarea>
+
+					<i class="fa fa-star" aria-hidden="true" style="color:darkgray;" id="gr1" onclick="gr1()"></i>
+    				<i class="fa fa-star" aria-hidden="true" style="color:darkgray;" id="gr2" onclick="gr2()"></i>
+    				<i class="fa fa-star" aria-hidden="true" style="color:darkgray;" id="gr3" onclick="gr3()"></i>
+    				<i class="fa fa-star" aria-hidden="true" style="color:darkgray;" id="gr4" onclick="gr4()"></i>
+    				<i class="fa fa-star" aria-hidden="true" style="color:darkgray;" id="gr5" onclick="gr5()"></i>
+
+					<button type="button" onclick="con()" class="border-button no-bottom-margin" style="position:relative; height:52px;">등 록</button>
+
+				</form>
+		<?php
+				}	
+			}
+			else{
+			}
+		
+		?>
+			
+		</div>
+		<hr>
+        
+        
+	<!-- blog -->
+		
+	<?php 
+		for($i=0;$i<4;$i++){
+	?>
+		<div style="width:75%" align="left">
+			<h5><a href="<?= $link[$i]; ?>"><?= $title[$i]; ?></a></h5>
+			<p style="font-size:13px;"><?= $description[$i]; ?></p>
+		</div>
+		<div style="position:relative; top:-110px; width:20%; float:right; margin-bottom:-100px;" align="left">
+				<i class="ion-ios-person" style="font-size:25px; text-indent:10px;"></i>
+				<a href="<?= $bloggerlink[$i]; ?>" style="position: relative; top:-3px;"><?= $bloggername[$i]; ?></a><br>
+				<i class="ion-ios-calendar-outline" style="font-size:25px; text-indent:10px;"></i>
+				<span style="position: relative; top:-3px;"><?= $postdate[$i]; ?></span>
+		</div>
+	<?php 
+		}
+	?>
+	
+
+</div><!-- /Subscribe Form -->
+
+<!-- socials icons -->
+<nav class="socials-icons animated bounceInUp" data-animation-delay="700">
+<ul>
+<li><a id="fb" onclick="share_fb()"></a></li>
+<li><a id="tt" onclick="share_tt()"><i class="ion-social-twitter"></i></a></li>
+<li><a id="gp" onclick="test()"><i class="ion-social-googleplus"></i></a></li>
+</ul> 
+</nav><!-- /socials icons -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</div><!-- /main -->
+       
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+<!-- /JS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA162gubKw3Dj75y7uxjNS8yBGdeZsg3Pw&callback=initMap"
+async defer></script>
+</body>
+</html>

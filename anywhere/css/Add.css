@@ -1,0 +1,14 @@
+@CHARSET "EUC-KR";
+input[type="submit"], button {
+	width: auto;
+	font-style: normal;
+	background: #fff;
+	color: #333;
+	cursor: pointer;
+	border: 1px solid #fff;
+	padding: 12px 20px;
+}
+
+input[type="submit"]:hover, button:hover {
+	color: #333;
+}

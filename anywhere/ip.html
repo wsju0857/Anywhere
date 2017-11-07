@@ -1,0 +1,393 @@
+﻿<?php 
+	include 'php/DB.php';
+	session_start();
+	$nowpage = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+?>
+<!DOCTYPE html>
+<html class="no-js" lang="ko-KR">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Title -->
+<title>AnyWhere - IP Location</title>
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+<style>
+	.profile_img{
+		border: 2px solid #fff;
+		border-radius: 70px;
+		-moz-border-radius: 70px;
+		-khtml-border-radius: 70px;
+		-webkit-border-radius: 70px;
+	}
+</style>
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<?php 
+	$lat = $_POST['lat'];
+	$lng = $_POST['lng'];
+
+	$select_query = mysql_query("SELECT name, latitude,longitude,( 6371 * acos(cos(radians($lat)) * cos(radians(latitude))
+          * cos(radians(longitude) - radians($lng))
+          + sin(radians($lat)) * sin(radians(latitude)))) AS distance
+		  FROM data
+		  HAVING distance < 0.9
+		  ORDER BY distance
+		  LIMIT 0 , 10;");
+	$total = mysql_num_rows($select_query);
+
+	if($total != 0){
+		for($i=0;$i<$total;$i++){
+			$name[$i] = mysql_result($select_query,$i,0);
+		}
+		for($o=0;$o<$total;$o++){
+			$mark_lat[$o] = mysql_result($select_query,$o,1);
+		}
+		for($p=0;$p<$total;$p++){
+			$mark_lng[$p] = mysql_result($select_query,$p,2);
+		}
+	}
+?>
+<script type="text/javascript">
+	function info(){
+		var info_div = document.getElementById('info_div');
+		if(info_div.style.display == "none"){
+			info_div.style.display = "block";
+		}else{
+			info_div.style.display = "none";
+		}
+	}
+	function share_fb(){
+		window.open('http://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL));
+	}
+
+	function share_tt(){
+		window.open('http://www.twitter.com/intent/tweet?text='+ encodeURIComponent(document.title+"\n")
+				+ '&url=' + encodeURIComponent(document.URL));
+	}
+	
+	function initMap() {
+		var myLatLng = {lat: <?= $lat; ?>, lng: <?= $lng; ?>};
+	    var map = new google.maps.Map(document.getElementById('map'), {
+	      center: myLatLng,
+	      scrollwheel: true,
+	      zoom: 15
+	    });
+
+	    var populationOptions = {	//반경 1km
+	            strokeColor: '#000000', //선
+	            strokeOpacity: 0.8,
+	            strokeWeight: 2,
+	            fillColor: '#808080',  //채우기
+	            fillOpacity: 0.2,
+	            map: map,
+	            center: new google.maps.LatLng(<?= $lat ?>,<?= $lng ?>) ,
+	            radius: 900
+	        };
+	    cityCircle = new google.maps.Circle(populationOptions);
+
+	    var image = 'images/human1.png';	//중심 이미지
+	    var marker = new google.maps.Marker({	//중심 마커
+	        position: myLatLng,
+	        map: map,
+	        title: '내 위치',
+	        icon: image
+	    });
+
+	     var markerMaxWidth = 300; // contentString이 나오는 부분의 최대 크기
+
+	    <?php 
+	    	if($total != 0){
+	    		for($i=0;$i<$total;$i++){
+	    ?>
+				    var image1 = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';	
+				    //데이터 이미지
+				    var marker<?= $i ?> = new google.maps.Marker({	//데이터 마커
+				        position: {lat:<?= $mark_lat[$i] ?>  ,lng:<?= $mark_lng[$i] ?>},
+				        map: map,
+				        title: '<?= $name[$i] ?>',
+				        icon: image1
+				    });
+
+				    var contentString<?= $i ?> = "<div>" +
+				    "<h6 style='color:black; align:center;'><?= $name[$i] ?></h6>" +
+				    "<a href='php/page_move.php?id=<?= $name[$i] ?>' style='color:black;'>상세페이지</a>" + 
+				    "</div>";
+
+			        var infowindow<?= $i ?> = new google.maps.InfoWindow({
+						content: contentString<?= $i ?>,
+						maxWidth: markerMaxWidth
+					});
+
+					google.maps.event.addListener(marker<?= $i ?>,'click',function(){
+						infowindow<?= $i ?>.open(map,marker<?= $i ?>);
+					});
+	  	<?php 
+				}
+			}
+	  	?>
+	}
+</script>
+
+</head>
+<body class="image-background" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+<!-- menu -->
+<nav id="menu" class="menu">
+<button class="menu__handle"><span>Menu</span></button>
+<div class="menu__inner">
+<ul>
+<li><a href="index.html"><i class="fa fa-fw fa-home"></i><span>Home</span></a></li>
+<li><a href="php/Geo.php"><i class="fa fa-fw fa-map"></i><span>GeoLocation</span></a></li>
+<li><a href="Gallery.html"><i class="fa fa-fw ion-images"></i><span>Gallery</span></a></li>
+<li><a href="registration.html"><i class="fa fa-fw fa-share" aria-hidden="true"></i><span>Registration</span></a></li>
+<li><a href="introduce.html"><i class="fa fa-fw fa-info" aria-hidden="true"></i><span>Introduce</span></a></li>
+<li><a href="team.html"><i class="fa fa-users" aria-hidden="true"></i><span>Team</span></a></li>
+</ul>
+</div>
+<div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
+<svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
+<path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
+</svg>
+</div>
+</nav><!-- /menu -->
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+<h1 style="margin-top:-70px;"><a href="index.html"><br>AnyWhere<br></a></h1>
+</div>
+</header>
+<!-- /header -->
+
+<!-- Login -->
+<?php
+	$user = $_SESSION['login_user'];
+	if(!isset($_SESSION['login_user'])){
+?>
+	<div style="position:absolute; left:1150px; top:40px;">
+		<form action="Login.html" method="post">
+			<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+			<input type="hidden" name="id" value="<?= $name; ?>">
+			<button type="submit" class="border-button no-bottom-margin" style="padding:9px 40px;">로그인</button>
+		</form>
+	</div>	
+<?php 
+	}else{
+?>
+	<div style="position:absolute; left:1150px; top:40px;" id="lf">
+		<button type="button" class="border-button no-bottom-margin" style="text-align:center; padding:0px 10px;
+		padding-top:4px; width:auto;" onclick="info()">
+		<?php 
+		$imgchk = mysql_query("select ImgName from member where id='$user'");
+		$total = mysql_num_rows($imgchk);
+		$result = mysql_fetch_array($imgchk);
+		
+		if($result[0] == "User.png"){
+		?>
+			<img class="profile_img" src="images/User.png" style="width:64px; height:64px;">
+		<?php
+		}else{
+		?>
+			<img class="profile_img" src="UserImageFolder/[<?= $user; ?>]<?= $result[0]; ?>" 
+			style="width:64px; height:64px;">
+		<?php
+		}
+		?>
+		<span style="position:relative; top:-27px;">&nbsp;<?= $user; ?></span></button>
+	</div>
+<?php 
+	}
+?>
+<!-- /Login -->
+
+<!-- Info Form -->
+	<?php 
+		$mailchk = mysql_query("select Chkmail from member where id='$user'");
+		$mailresult = mysql_fetch_array($mailchk);
+		if($mailresult[0] == "준회원"){
+	?>
+			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:200px; 
+			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+			<?php echo $user; ?>
+			<form action="Modify.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
+			</form>
+			
+			<form action="Email1.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin" style="width:168px; padding:9px 38px;">
+				이메일 인증</button>
+			</form>
+			
+			<form action="php/Logout.php" method="post">
+				<input type="hidden" name="id" value="<?= $name; ?>">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+			</form>
+			</div>
+	<?php 
+		}else{
+	?>
+			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:150px; 
+			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
+			<?php echo $user; ?>
+			
+			<form action="Modify.html" method="post">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
+			</form>
+			
+			<form action="php/Logout.php" method="post">
+				<input type="hidden" name="id" value="<?= $name; ?>">
+				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
+				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
+			</form>
+			</div>
+	<?php 
+		}
+	?>
+<!-- /Info Form -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide"> 
+
+<div style="display: none;">
+<?php
+	if(!isset($_SESSION['login_status'])){
+		$_SESSION['login_status'] = "Normal";
+		echo $_SESSION['login_status'];
+	}else{
+		echo $_SESSION['login_status'];
+	}
+?>
+</div>
+
+<!-- Subscribe Form -->
+<div class="form animated bounceInUp" data-animation-delay="700">
+
+<hr>
+<span style="font-size:28px"> - <strong>I</strong>P <strong>L</strong>ocation - </span><br>
+<span>IP Location은 사용자가 접속한 IP정보를 이용하여 사용자에게 1Km내의 유용한 정보를 제공합니다.</span><br>
+<a href="php/Geo.php">[ <strong>Geo Location</strong> ]</a>
+<a href="php/ip.php">[ <strong>IP Location</strong> ] </a><br>
+<span>접속 IP : <?= $_POST['ip']; ?></span>
+<br><br>
+<div id="map" style="width:100%; height: 500px;"></div>
+<br><hr>
+
+<span id="GeoResults" style="display:none;"></span>
+
+</div><!-- /Subscribe Form -->
+
+<!-- socials icons -->
+<nav class="socials-icons animated bounceInUp" data-animation-delay="700">
+<ul>
+<li><a id="fb" onclick="share_fb()"><i class="ion-social-facebook"></i></a></li>
+<li><a id="tt" onclick="share_tt()"><i class="ion-social-twitter"></i></a></li>
+<li><a id="gp" onclick="test()"><i class="ion-social-googleplus"></i></a></li>
+</ul> 
+</nav><!-- /socials icons -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->        
+
+<!-- JS -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA162gubKw3Dj75y7uxjNS8yBGdeZsg3Pw&callback=initMap"
+async defer></script>
+<!-- /JS -->
+</body>
+</html>

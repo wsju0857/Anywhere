@@ -1,0 +1,268 @@
+﻿<?php 
+	include 'php/DB.php';
+	session_start();
+	$now_page = $_POST['now_page'];
+	$id = $_POST['id'];
+	$SearchText = $_POST['SearchText'];
+?>
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en-US">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="326497702693-3fh02qdol05rmnvur3v8u2s00778dvfs.apps.googleusercontent.com">
+
+
+<!-- Title -->
+<title>AnyWhere - 로그인</title>
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+
+<!-- JS -->
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script>
+	function Chkform(){
+		var li = Login_form.login_id.value;
+		var lp = Login_form.login_pw.value;
+		if(li == ""){
+			alert("아이디를 입력해주세요!");
+			return false;
+		}else if(lp == ""){
+			alert("비밀번호를 입력해주세요!");
+			return false;
+		}
+	}
+</script>
+
+</head>
+<body class="image-background" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+<a href="index.html"><h1 style="margin-top:-70px;"><br>AnyWhere<br></h1></a>
+<p><? $SearchText; ?></p>
+</div>
+</header>
+<!-- /header -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide">
+
+<!-- Subscribe Form -->
+<div class="form animated bounceInUp" data-animation-delay="700">
+<!-- container form -->
+<div class="container-form">
+
+<form name="Login_form" action="php/Login.php" method="post" onsubmit="return Chkform();">
+	<input type="hidden" name="now_page" value="<?= $now_page; ?>">
+	<input type="hidden" name="id" value="<?= $id; ?>">
+	<input type="hidden" name="SearchText" value="<?= $SearchText; ?>">
+	<input type="text" name="login_id" placeholder="아이디" style="width:325px;"><br>
+	<input type="password" name="login_pw" placeholder="비밀번호" style="width:325px;"><br>
+	<button type="submit" class="border-button no-bottom-margin" 
+	style="width:325px; text-align:center; margin-top:-1px;">로그인</button><br>
+	
+	<!-- 구글 로그인 -->
+    <script> 
+      function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+      };
+    </script>
+    <!-- /구글 로그인 -->
+
+    <!-- 페이스북 로그인 -->
+    <script>
+  	function statusChangeCallback(response) {
+    	if (response.status === 'connected') {
+      		LoginAPI();
+    	} else if(response.status === 'not_authorized'){
+      		alert('로그인을 해야 이용가능합니다');
+    	} else{
+
+    	}
+  	}
+  	function checkLoginState() {
+    	FB.getLoginStatus(function(response) {
+      		statusChangeCallback(response);
+    	});
+  	}
+  	window.fbAsyncInit = function() {
+  		FB.init({
+    		appId      : '737394976437979',
+    		cookie     : true,
+    		xfbml      : true,
+    		version    : 'v2.8'
+  		});
+
+  		FB.getLoginStatus(function(response){
+    		statusChangeCallback(response);	//응답을 처리하는 함수
+  		});
+
+		FB.Event.subscribe('auth.login', function(response) {
+		    //document.location.reload();
+		});
+	};
+
+  	(function(d, s, id) {
+    	var js, fjs = d.getElementsByTagName(s)[0];
+    	if (d.getElementById(id)) return;
+    	js = d.createElement(s); js.id = id;
+    	js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.8&appId=737394976437979";
+    	fjs.parentNode.insertBefore(js, fjs);
+  	}(document, 'script', 'facebook-jssdk'));
+
+  	function LoginAPI() {
+    	FB.api('/me', function(response) {
+        	document.getElementById("c1").innerHTML = response.status;
+        	var chkRS = document.getElementById("c1").innerHTML;
+			if(chkRS == "undefined"){
+				var FBform = document.createElement("form");
+	    		FBform.setAttribute("method","post");
+	    		FBform.setAttribute("action","php/FBLogin.php");
+	    		document.body.appendChild(FBform);
+	
+	    		var FB_name = document.createElement("input");  
+	    		FB_name.setAttribute("type", "hidden");                 
+	    		FB_name.setAttribute("name", "FB_name");                        
+	    		FB_name.setAttribute("value", response.name);                          
+	    		FBform.appendChild(FB_name);
+	
+	    		var FB_status = document.createElement("input");  
+	    		FB_status.setAttribute("type", "hidden");                 
+	    		FB_status.setAttribute("name", "FB_status");                        
+	    		FB_status.setAttribute("value", response.status);                          
+	    		FBform.appendChild(FB_status);
+	
+	    		FBform.submit();
+			}else{
+				
+			}
+    	});
+  	}
+	</script>
+   
+	<a href="Search_id.html">아이디 찾기 </a><span style="color:gray;">&nbsp;&nbsp;<strong>|</strong>&nbsp;&nbsp;</span>
+	<a href="Search_pw.html">비밀번호 찾기 </a><span style="color:gray;">&nbsp;&nbsp;<strong>|</strong>&nbsp;&nbsp;</span>
+	<a href="SignUp.html">회원가입</a><br>
+</form>
+
+<div style="display: none;" id="c1"></div>
+</div><!-- /container form -->
+</div><!-- /Subscribe Form -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->        
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- /JS -->
+</body>
+</html>

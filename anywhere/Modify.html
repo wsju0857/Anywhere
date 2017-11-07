@@ -1,0 +1,233 @@
+<?php 
+	include 'php/DB.php';
+	session_start();
+	header("Content-Type: text/html; charset=UTF-8");
+?>
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en-US">
+<head>
+
+<!-- META DATA -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="326497702693-3fh02qdol05rmnvur3v8u2s00778dvfs.apps.googleusercontent.com">
+
+
+<!-- Title -->
+<title>AnyWhere - Modify</title>
+
+<!-- CSS Global Compulsory -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/Add.css" >
+
+
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css" />
+<link rel="stylesheet" type="text/css" href="css/owl.theme.css" />
+<link rel="stylesheet" type="text/css" href="css/vegas.min.css" />
+<link rel="stylesheet" type="text/css" href="css/menu.css" />
+<link rel="stylesheet" type="text/css" href="css/sidebar.css" />
+<style media="screen">
+	#ImgDiv{
+		position:relative; left:310px; border:2px solid #fff; width:325px; border-radius:5px;
+		height:200px; padding-top:20px;
+	}
+	.profile_img{
+		border: 2px solid #fff;
+		border-radius: 70px;
+		-moz-border-radius: 70px;
+		-khtml-border-radius: 70px;
+		-webkit-border-radius: 70px;
+	}
+</style>
+
+<!-- Fonts -->	
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
+
+
+<!-- JS -->
+<script type="text/javascript" src="js/modernizr.js"></script>
+<script type="text/javascript" src="js/snap.svg-min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<script>
+	function Chkform(){
+		var mp = Modify_form.modify_pw.value;
+		var me = Modify_form.modify_email.value;
+		var mf = Modify_form.Screenshot.value;
+		if(mp == ""){
+			alert("비밀번호를 입력해주세요!");
+			return false;
+		}else if(me == ""){
+			alert("이메일을 입력해주세요!");
+			return false;
+		}else if(mf == ""){
+			var noimg = confirm("※ 사진이 선택되지 않았습니다. 계속 진행하시겠습니까?");
+			if(noimg){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+	function readURL(input) { 
+		if (input.files && input.files[0]) { 
+			var reader = new FileReader();
+			reader.onload = function (e) { 
+				 $('#preview').attr('src', e.target.result); 
+			} 
+			 reader.readAsDataURL(input.files[0]); 
+		} 
+	}
+</script>
+
+
+</head>
+<body class="image-background" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- Preloader -->
+<div id="preloader">
+<div id="loading-animation">&nbsp;</div>
+</div>
+<!-- /Preloader -->
+
+<!-- Overlay -->
+<div id="section-home" class="home-section-wrap center">
+<div class="section-overlay"></div>
+</div>
+<!-- /Overlay -->
+
+<!-- container -->
+<div class="containers">
+
+<!-- main -->
+<div class="main">
+<!-- header -->
+<header class="header-site">
+<div class="logo-site animated bounceInDown" data-animation-delay="700" style="width:350px;">
+<a href="index.html"><h1 style="margin-top:-70px;"><br>AnyWhere<br></h1></a>
+</div>
+</header>
+<!-- /header -->
+
+<!-- section -->                 
+<section class="section fullscreen site-main">
+<div class="container-section">
+<div class="container-table">
+<div class="content-table">
+<!-- bt-carousel -->
+<div class="bt-carousel">
+
+<!-- home section -->
+<div class="item-slide show">
+<!-- container -->
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+<!-- content slide -->
+<div class="content-slide">
+
+<!-- Subscribe Form -->
+<div class="form animated bounceInUp" data-animation-delay="700">
+<!-- container form -->
+<div class="container-form">
+
+<form enctype="multipart/form-data" action="php/Modify.php" name="Modify_form" method="post" onsubmit="return Chkform();" 
+style="position:relative; top:-30px;"> <!-- 파일 업로드를 위한 인코딩선언  enctype() -->
+	<span style="font-size:20px"><?= $_SESSION['login_user']; ?>님 정보 수정</span><br><br>
+	<span style="position:relative; left:-100px;">사진 업로드</span>
+	<div id="ImgDiv">
+		<input type="hidden" name="MAX_FILE_SIZE" value="33459"> <!-- 파일 맥스 사이즈 설정 -->
+		<?php 
+		$user = $_SESSION['login_user'];
+		$imgchk = mysql_query("select ImgName from member where id='$user'");
+		$total = mysql_num_rows($imgchk);
+		$result = mysql_fetch_array($imgchk);
+		if($result[0] == "User.png"){
+		?>
+			<img class="profile_img" id="preview" src="images/User.png" style="width:96px; height:96px;">
+		<?php
+		}else{
+		?>
+			<img class="profile_img" id="preview" src="UserImageFolder/[<?= $user; ?>]<?= $result[0]; ?>" 
+			style="width:96px; height:96px;">
+		<?php
+		}
+		?>
+		<input type="file" id="Screenshot" name="Screenshot" style="position:relative; left:15px; width:290px;"
+		onchange="readURL(this);">
+	</div><br>	
+	<input type="password" name="modify_pw" id="modify_pw" placeholder="비밀번호" 
+	style="width:325px; margin-top:-9px;"><br>
+	<input type="email" name="modify_email" id="modify_email" placeholder="이메일" style="width:325px;"><br>
+		
+	<button type="submit" class="border-button no-bottom-margin" 
+	style="width:325px; text-align:center; margin-top:-1px;">수정</button><br>
+	
+	<button type="button" class="border-button no-bottom-margin" 
+	style="width:325px; text-align:center; margin-top:15px;" onclick="history.back();">취소</button>
+</form>
+
+<form post>
+
+</form>
+
+<div style="display: none;" id="c1"></div>
+</div><!-- /container form -->
+</div><!-- /Subscribe Form -->
+
+<!-- copyright -->
+<footer class="copy-right animated bounceInUp" data-animation-delay="700">
+<div class="copyright">
+© 2017 Hallym Team KT - All Rights Reserved
+</div>
+</footer><!-- /copyright -->
+
+</div><!-- /content slide -->
+</div>
+</div><!-- /row -->
+</div><!-- /container -->
+</div>
+<!-- /home section -->
+
+</div><!-- /bt-carousel -->
+</div>
+</div>
+</div>
+</section><!-- /section -->  
+</div><!-- /main -->
+</div><!-- /container -->        
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/retina.min.js"></script>
+<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.parallaxify.min.js"></script>
+<script type="text/javascript" src="js/jquery.particleground.min.js"></script>
+<script type="text/javascript" src="js/vegas.min.js"></script>
+<script type="text/javascript" src="js/trianglify.min.js"></script>
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="js/jquery.appear.js"></script>
+<script type="text/javascript" src="js/classie.js"></script>
+<script type="text/javascript" src="js/sidebar.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- /JS -->
+</body>
+</html>

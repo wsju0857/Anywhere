@@ -1,0 +1,56 @@
+public void initDB(){
+		try {
+			 Class.forName("com.mysql.jdbc.Driver").newInstance();
+			 String url = "jdbc:mysql://localhost/project";
+			 String option="?useUnicode=true&characterEncoding=EUC_KR&autoReconnect=true&useSSL=false";
+			 url = url + option;
+			 conn = DriverManager.getConnection(url, "root", "0000");
+			 stat = conn.createStatement();
+		 } catch (Exception e) {
+			 e.printStackTrace();
+		 }
+	}
+	public boolean CheckUser(){
+		try {
+			PreparedStatement stat;
+  
+           stat = conn.prepareStatement("select * from member where user_id=?");
+           stat.setString(1, login_id);
+           rs = stat.executeQuery();
+          
+           if(true == rs.next()){
+               //아이디 있음
+               String temp = rs.getString(2);
+               if(temp.equals(login_pwd)){
+                   result = "성공";
+               }else{
+            	   result = "실패";
+               }
+           }else{
+        	   result = "실패";
+           }
+           stat.close();
+       }catch(Exception ex){
+           return false;
+       }
+       return true;
+   }
+   public void disDB(){
+       try{
+           if(stat != null){
+               stat.close();    
+           }
+       }catch(Exception e)
+       {
+           e.printStackTrace();
+       }
+       try{
+           if(conn != null){
+               conn.close();
+           }
+       }catch(Exception e)
+       {
+           e.printStackTrace();
+       }
+   }
+}
