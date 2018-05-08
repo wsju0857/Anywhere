@@ -138,12 +138,10 @@ data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
 
 <!-- Login -->
 <?php
-	$user = $_SESSION['login_user'];
 	if(!isset($_SESSION['login_user'])){
 ?>
 	<div style="position:absolute; left:1150px; top:40px;">
 		<form action="Login.html" method="post">
-			<input type="hidden" name="SearchText" value="<?= $Search1; ?>">
 			<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 			<button type="submit" class="border-button no-bottom-margin" style="padding:9px 40px;">로그인</button>
 		</form>
@@ -155,20 +153,20 @@ data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
 		<button type="button" class="border-button no-bottom-margin" style="text-align:center; padding:0px 10px;
 		padding-top:4px; width:auto;" onclick="info()">
 		<?php 
-		$imgchk = mysql_query("select ImgName from member where id='$user'");
-		$total = mysql_num_rows($imgchk);
-		$result = mysql_fetch_array($imgchk);
-		
-		if($result[0] == "User.png"){
+			$imgchk = mysql_query("select imgname from member where id='$user'");
+			$total = mysql_num_rows($imgchk);
+			$result = mysql_fetch_array($imgchk);
+			
+			if($result[0] == "User.png"){
 		?>
 			<img class="profile_img" src="images/User.png" style="width:64px; height:64px;">
 		<?php
-		}else{
+			}else{
 		?>
 			<img class="profile_img" src="UserImageFolder/[<?= $user; ?>]<?= $result[0]; ?>" 
 			style="width:64px; height:64px;">
 		<?php
-		}
+			}
 		?>
 		<span style="position:relative; top:-27px;">&nbsp;<?= $user; ?></span></button>
 	</div>
@@ -179,50 +177,54 @@ data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
 
 <!-- Info Form -->
 	<?php 
-		$mailchk = mysql_query("select Chkmail from member where id='$user'");
-		$mailresult = mysql_fetch_array($mailchk);
-		if($mailresult[0] == "준회원"){
+		if(isset($_SESSION['login_user'])) {
+			$user = $_SESSION['login_user'];
+			$mailchk = mysql_query("select Chkmail from member where id='$user'");
+			$mailresult = mysql_fetch_array($mailchk);
+			if($mailresult[0] == "준회원"){
 	?>
 			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:200px; 
 			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
 			<?php echo $user; ?>
-			<form action="Modify.html" method="post">
+			<div id="triangle-up"></div>
+
+			<form action="Modify.html">
 				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
 			</form>
 			
-			<form action="Email1.html" method="post">
+			<form action="Email1.html">
 				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 				<button type="submit" class="border-button no-bottom-margin" style="width:168px; padding:9px 38px;">
 				이메일 인증</button>
 			</form>
 			
-			<form action="php/Logout.php" method="post">
-				<input type="hidden" name="SearchText" value="<?= $Search1; ?>">
+			<form action="php/Logout.php">
 				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
 			</form>
 			</div>
-	<?php 
-		}else{
+	<?php
+			}else{
 	?>
 			<div id="info_div" style="position:absolute; top:140px; left:1147px; float:right; width:210px; height:150px; 
 			background-color:rgb(93,93,93); z-index:100; border-radius:5px; border:2px solid #fff; display:none;">
 			<?php echo $user; ?>
+			<div id="triangle-up"></div>
 			
-			<form action="Modify.html" method="post">
+			<form action="Modify.html">
 				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 				<button type="submit" class="border-button no-bottom-margin">정보수정</button>
 			</form>
 			
-			<form action="php/Logout.php" method="post">
-				<input type="hidden" name="SearchText" value="<?= $Search1; ?>">
+			<form action="php/Logout.php">
 				<input type="hidden" name="now_page" value="<?= $nowpage; ?>">
 				<button type="submit" class="border-button no-bottom-margin">로그아웃</button>
 			</form>
 			</div>
-	<?php 
-		}
+	<?php
+			}
+		}	
 	?>
 <!-- /Info Form -->
 
