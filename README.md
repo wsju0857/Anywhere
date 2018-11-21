@@ -14,5 +14,6 @@
 
 ### 결과물 사진
 <div align="center">
-<img src="main.png" width="30%">&nbsp;<img src="search.png" width="30%">&nbsp;<img src="detail.png" width="30%">
+<img src="main.png" width="50%">&nbsp;<img src="search.png" width="50%">
+<img src="detail.png" width="30%">&nbsp;<img src="map.png" width="50%">&nbsp;
 </div>
