@@ -11,3 +11,8 @@
 + 갤러리, 태그 클라우드 등 다양한 플러그인 활용, 네이버 블로그 API 활용 파싱(JSON)
 + 개발Tool : SublimeText3, Filezila, PHPMyadmin
 + 성과 : 교내 LINC사업단 경진대회 은상, 교내 창업동아리 참여, 강원도 대학생 창업 경진대회 참여
+
+### 결과물 사진
+<div align="center">
+<img src="main.png" width="30%">&nbsp;<img src="search.png" width="30%">&nbsp;<img src="detail.png" width="30%">
+</div>
