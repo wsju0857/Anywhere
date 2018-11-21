@@ -1,5 +1,4 @@
 ## Anywhere
-#### [http://115.68.230.30/anywhere/index.html (바로가기)](http://115.68.230.30/anywhere/index.html)
 ### 개요
 + 언제 어디서나 주변의 각종 데이터를 확인 할 수 있는 AR 앱과 웹.
 ### 공헌 내용
